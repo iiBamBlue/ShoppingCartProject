@@ -25,21 +25,6 @@ const products = [
   },
 ];
 
-/* Create 3 or more product objects using object literal notation 
-   Each product should include five properties
-   - name: name of product (string)
-   - price: price of product (number)
-   - quantity: quantity in cart should start at zero (number)
-   - productId: unique id for the product (number)
-   - image: picture of product (url string)
-*/
-
-/* Images provided in /images folder. All images from Unsplash.com
-   - cherry.jpg by Mae Mu
-   - orange.jpg by Mae Mu
-   - strawberry.jpg by Allec Gomes
-*/
-
 // Declare an empty array named cart to hold the items in the cart
 let cart = [];
 
@@ -48,17 +33,13 @@ let totalPaid = 0;
 
 /**
  * Finds a product in the `products` array by its unique ID.
- * @param {number} productId - The unique identifier for the product.
- * @returns {object|undefined} The product object if found, otherwise undefined.
  */
 function getProductById(productId) {
   return products.find((p) => p.productId === productId);
 }
 
 /**
- * Adds a product to the cart. If the product is already in the cart,
- * it increases the quantity by one.
- * @param {number} productId - The ID of the product to add.
+ * Adds a product to the cart or increases its quantity.
  */
 function addProductToCart(productId) {
   const product = getProductById(productId);
@@ -70,8 +51,7 @@ function addProductToCart(productId) {
 }
 
 /**
- * Increases the quantity of a specific product in the cart by one.
- * @param {number} productId - The ID of the product to increase.
+ * Increases the quantity of a product in the cart.
  */
 function increaseQuantity(productId) {
   const product = getProductById(productId);
@@ -81,9 +61,7 @@ function increaseQuantity(productId) {
 }
 
 /**
- * Decreases the quantity of a product in the cart. If the quantity
- * reaches zero, the product is removed from the cart.
- * @param {number} productId - The ID of the product to decrease.
+ * Decreases the quantity of a product in the cart.
  */
 function decreaseQuantity(productId) {
   const product = getProductById(productId);
@@ -99,9 +77,7 @@ function decreaseQuantity(productId) {
 }
 
 /**
- * Removes a product entirely from the cart, regardless of its quantity,
- * and resets its quantity to zero.
- * @param {number} productId - The ID of the product to remove.
+ * Removes a product entirely from the cart.
  */
 function removeProductFromCart(productId) {
   const product = getProductById(productId);
@@ -115,8 +91,7 @@ function removeProductFromCart(productId) {
 }
 
 /**
- * Calculates the total cost of all items currently in the cart.
- * @returns {number} The total cost.
+ * Calculates the total cost of all items in the cart.
  */
 function cartTotal() {
   return cart.reduce(
@@ -126,8 +101,7 @@ function cartTotal() {
 }
 
 /**
- * Empties the cart of all items and resets the quantity
- * for all products to zero.
+ * Empties the cart of all items.
  */
 function emptyCart() {
   products.forEach((product) => {
@@ -138,8 +112,6 @@ function emptyCart() {
 
 /**
  * Processes a payment from the customer.
- * @param {number} amount - The amount of cash received from the customer.
- * @returns {number} The difference between the amount paid and the cart total.
  */
 function pay(amount) {
   totalPaid += amount;
@@ -152,20 +124,6 @@ function pay(amount) {
   return difference;
 }
 
-/**
- * This is a helper function for the tests and does not affect the cart logic.
- */
-function resetState() {
-  emptyCart();
-  totalPaid = 0;
-}
-
-/* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
-
-/* The following is for running unit tests. 
- To fully complete this project, it is expected that all tests pass.
- Run the following command in terminal to run tests: npm run test
-*/
 /*
 module.exports = {
   products,
@@ -177,7 +135,5 @@ module.exports = {
   cartTotal,
   pay,
   emptyCart,
-  resetState,
-  getProductById,
 };
 */

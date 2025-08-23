@@ -1,15 +1,14 @@
 /** @format */
 
 let currencySymbol = "$";
-let paymentCompleted = false; // This flag is needed to clear the receipt later
+let paymentCompleted = false;
 
-// Draws product list
 function drawProducts() {
   let productList = document.querySelector(".products");
   let productItems = "";
   products.forEach((element) => {
     productItems += `
-            <div data-productId='${element.productId}'>
+            <div data-product-id='${element.productId}'>
                 <img src='${element.image}'>
                 <h3>${element.name}</h3>
                 <p>price: ${currencySymbol}${element.price}</p>
@@ -20,32 +19,29 @@ function drawProducts() {
   productList.innerHTML = productItems;
 }
 
-// Draws cart
-function drawCart() {
-  let cartList = document.querySelector(".cart");
-  let cartItems = "";
+function displayCart() {
+  const cartDisplay = document.querySelector(".cart");
   if (cart.length === 0) {
-    cartList.innerHTML = "Cart Empty";
+    cartDisplay.innerHTML = "<p>Your cart is empty</p>";
     return;
   }
-  cart.forEach((element) => {
-    let itemTotal = element.price * element.quantity;
-    cartItems += `
-            <div data-productId='${element.productId}'>
-                <h3>${element.name}</h3>
-                <p>price: ${currencySymbol}${element.price}</p>
-                <p>quantity: ${element.quantity}</p>
-                <p>total: ${currencySymbol}${itemTotal.toFixed(2)}</p>
-                <button class="qup">+</button>
-                <button class="qdown">-</button>
-                <button class="remove">remove</button>
-            </div>
-        `;
+  let html = "";
+  cart.forEach((item) => {
+    const itemTotal = item.price * item.quantity;
+    html += `
+      <div data-product-id='${item.productId}'>
+        <p>${item.name} - ${currencySymbol}${item.price}</p>
+        <p>Quantity: ${item.quantity}</p>
+        <p>Total: ${currencySymbol}${itemTotal.toFixed(2)}</p>
+        <button class="qup">+</button>
+        <button class="qdown">-</button>
+        <button class="remove">Remove</button>
+      </div>
+    `;
   });
-  cartList.innerHTML = cartItems;
+  cartDisplay.innerHTML = html;
 }
 
-// Draws checkout
 function drawCheckout() {
   let checkout = document.querySelector(".cart-total");
   checkout.innerHTML = "";
@@ -55,47 +51,45 @@ function drawCheckout() {
   checkout.append(div);
 }
 
-// Initialize store with products, cart, and checkout
 drawProducts();
-drawCart();
+displayCart();
 drawCheckout();
 
-// Use event delegation on a parent element for adding products
 document.querySelector(".products-container").addEventListener("click", (e) => {
   if (e.target.classList.contains("add-to-cart")) {
-    let productElement = e.target.closest("[data-productId]");
+    const productElement = e.target.closest("[data-product-id]");
     if (productElement) {
-      // FIX: Logic to clear receipt for a new "customer"
+      const productId = parseInt(
+        productElement.getAttribute("data-product-id")
+      );
       if (paymentCompleted) {
-        document.querySelector(".pay-summary").innerHTML = "";
-        paymentCompleted = false; // Reset the flag
+        const receiptDisplay = document.querySelector(".pay-summary");
+        if (receiptDisplay) {
+          receiptDisplay.innerHTML = "";
+        }
+        paymentCompleted = false;
       }
-      let productId = parseInt(productElement.getAttribute("data-productId"));
       addProductToCart(productId);
-      drawCart();
+      displayCart();
       drawCheckout();
     }
   }
 });
 
-// Event delegation used to support dynamically added cart items
 document.querySelector(".cart").addEventListener("click", (e) => {
-  function runCartFunction(fn) {
-    let productId = parseInt(
-      e.target.parentNode.getAttribute("data-productId")
-    );
-    fn(productId);
-    drawCart();
-    drawCheckout();
-  }
-
+  if (!e.target.closest("[data-product-id]")) return;
+  const productId = parseInt(
+    e.target.closest("[data-product-id]").getAttribute("data-product-id")
+  );
   if (e.target.classList.contains("remove")) {
-    runCartFunction(removeProductFromCart);
+    removeProductFromCart(productId);
   } else if (e.target.classList.contains("qup")) {
-    runCartFunction(increaseQuantity);
+    increaseQuantity(productId);
   } else if (e.target.classList.contains("qdown")) {
-    runCartFunction(decreaseQuantity);
+    decreaseQuantity(productId);
   }
+  displayCart();
+  drawCheckout();
 });
 
 document.querySelector(".pay").addEventListener("click", (e) => {
@@ -103,7 +97,7 @@ document.querySelector(".pay").addEventListener("click", (e) => {
   let amount = parseFloat(document.querySelector(".received").value) || 0;
   let cashReturn = pay(amount);
   let paymentSummary = document.querySelector(".pay-summary");
-  paymentSummary.innerHTML = ""; // FIX: Clears the old receipt before adding a new one
+  paymentSummary.innerHTML = "";
   let div = document.createElement("div");
 
   if (cashReturn >= 0) {
@@ -112,24 +106,35 @@ document.querySelector(".pay").addEventListener("click", (e) => {
             <p>Cash Returned: ${currencySymbol}${cashReturn.toFixed(2)}</p>
             <p>Thank you!</p>
         `;
-    paymentCompleted = true; // Set flag to true for the next transaction
+    paymentCompleted = true;
   } else {
     div.innerHTML = `
             <p>Cash Received: ${currencySymbol}${amount.toFixed(2)}</p>
             <p>Remaining Balance: ${currencySymbol}${-cashReturn.toFixed(2)}</p>
             <p>Please pay additional amount.</p>
-            <hr/>
         `;
   }
-
-  // FIX: These lines solve the remaining bugs
-  document.querySelector(".received").value = ""; // Clears the input field
+  document.querySelector(".received").value = "";
   paymentSummary.append(div);
-  drawCart(); // Redraws the now-empty cart
-  drawCheckout(); // Updates the cart total to 0
+  displayCart();
+  drawCheckout();
 });
 
-/* 
-The following code manages the shopping cart functionality, including adding products,
-updating quantities, calculating totals, and handling payments.
-*/
+function createEmptyCartButton() {
+  const buttonContainer = document.querySelector(".empty-btn");
+  if (buttonContainer) {
+    const emptyButton = document.createElement("button");
+    emptyButton.classList.add("empty");
+    emptyButton.innerText = "Empty Cart";
+    buttonContainer.append(emptyButton);
+  }
+}
+createEmptyCartButton();
+
+document.querySelector(".empty-btn").addEventListener("click", (e) => {
+  if (e.target.classList.contains("empty")) {
+    emptyCart();
+    displayCart();
+    drawCheckout();
+  }
+});
