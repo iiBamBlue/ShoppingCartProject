@@ -1,5 +1,6 @@
-/* @format */
+/** @format */
 
+// Create an array named products which you will use to add all of your product object literals that you create in the next step.
 const products = [
   {
     name: "Cherry",
@@ -24,7 +25,22 @@ const products = [
   },
 ];
 
-// This array holds the items currently in the shopping cart.
+/* Create 3 or more product objects using object literal notation 
+   Each product should include five properties
+   - name: name of product (string)
+   - price: price of product (number)
+   - quantity: quantity in cart should start at zero (number)
+   - productId: unique id for the product (number)
+   - image: picture of product (url string)
+*/
+
+/* Images provided in /images folder. All images from Unsplash.com
+   - cherry.jpg by Mae Mu
+   - orange.jpg by Mae Mu
+   - strawberry.jpg by Allec Gomes
+*/
+
+// Declare an empty array named cart to hold the items in the cart
 let cart = [];
 
 // This variable tracks the total amount of cash paid by the customer.
@@ -47,7 +63,6 @@ function getProductById(productId) {
 function addProductToCart(productId) {
   const product = getProductById(productId);
   if (!product) return;
-
   product.quantity++;
   if (!cart.includes(product)) {
     cart.push(product);
@@ -72,7 +87,6 @@ function increaseQuantity(productId) {
  */
 function decreaseQuantity(productId) {
   const product = getProductById(productId);
-
   if (product && product.quantity > 0) {
     product.quantity--;
     if (product.quantity === 0) {
@@ -131,24 +145,28 @@ function pay(amount) {
   totalPaid += amount;
   const total = cartTotal();
   const difference = totalPaid - total;
-
   if (difference >= 0) {
-    // Reset the total paid for the next transaction.
     totalPaid = 0;
-    // Empty the cart since the items have been purchased.
     emptyCart();
   }
-
   return difference;
 }
 
-// This is a helper function for the tests.
+/**
+ * This is a helper function for the tests and does not affect the cart logic.
+ */
 function resetState() {
   emptyCart();
   totalPaid = 0;
 }
 
-/* The following is for running unit tests. */
+/* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
+
+/* The following is for running unit tests. 
+ To fully complete this project, it is expected that all tests pass.
+ Run the following command in terminal to run tests: npm run test
+*/
+/*
 module.exports = {
   products,
   cart,
@@ -162,3 +180,4 @@ module.exports = {
   resetState,
   getProductById,
 };
+*/
