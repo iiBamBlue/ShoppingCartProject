@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # Shopping Cart Functionality
 
 You will be creating the core functionality used for a storefront application. The visual of the storefront as well as the JavaScript necessary to connect the code you will write, to that visual have already been created.
@@ -28,7 +30,9 @@ If you would like to take advantage of the live server and/or the tests, you mus
 To check if you already have Node.js installed, open your terminal application and run the following code:
 
 ```bash
+
 node -v
+
 ```
 
 If Node.js is installed, a version will be returned--something like `v16.14.2`.
@@ -105,21 +109,21 @@ When the tests run, you will see a bunch of information come up in the terminal 
 
 Step 1: Review the starter code  
 Step 2: Build the products  
-Step 3: Create the cart functionality. 
+Step 3: Create the cart functionality.
 
 - `addProductToCart()`
 - `increaseQuantity()`
 - `decreaseQuantity()`
 - `removeProductFromCart()`
 
-Step 4: Create the Checkout Functionality. 
+Step 4: Create the Checkout Functionality.
 
 - `cartTotal()`
 - `pay()`
 
 Step 5: REFACTOR!  
 Step 6: Re-test the user interface  
-Step 7: [Optional] Add extra features 
+Step 7: [Optional] Add extra features
 
 - Remove all items from the cart using an `emptyCart` function.
 - Integrate a currency switcher to switch between USD, EUR, and YEN.
